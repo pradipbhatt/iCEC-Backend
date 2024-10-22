@@ -40,7 +40,7 @@ export const registerUser = async (req, res) => {
         await tempUser.save();
 
         // Send verification email with OTP and link
-        const verificationLink = `https://kajal-backend.onrender.com/api/users/verify-email?token=${verificationToken}&otp=${otp}`;
+        const verificationLink = `https://icec.onrender.com/api/users/verify-email?token=${verificationToken}&otp=${otp}`;
 
 
         // Render the HTML email template with EJS
