@@ -157,7 +157,6 @@ export const loginUser = async (req, res) => {
 
 
 // Forgot Password
-// Your forgotPassword function
 export const forgotPassword = async (req, res) => {
     const { email } = req.body;
 
@@ -181,16 +180,12 @@ export const forgotPassword = async (req, res) => {
             }
         });
 
-        // Render the email template
-        const templatePath = path.join(__dirname, './views/passwordReset.ejs');
-        const emailContent = await ejs.renderFile(templatePath, { link });
-
         // Send email
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
             subject: "Password Reset",
-            html: emailContent, // Send the rendered HTML
+            text: `Click on the link to reset your password: ${link}`,
         });
 
         res.json({ status: "ok", message: "Password reset link sent to your email!" });
