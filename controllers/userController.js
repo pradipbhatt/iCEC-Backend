@@ -157,6 +157,7 @@ export const loginUser = async (req, res) => {
 
 
 // Forgot Password
+// Your forgotPassword function
 export const forgotPassword = async (req, res) => {
     const { email } = req.body;
 
@@ -169,7 +170,7 @@ export const forgotPassword = async (req, res) => {
         const secret = process.env.JWT_SECRET + oldUser.password;
         const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { expiresIn: "10m" });
 
-        const link = `https://kajal-backend.onrender.com/api/users/reset-password/${oldUser._id}/${token}`;
+        const link = `https://icec.onrender.com/api/users/reset-password/${oldUser._id}/${token}`;
 
         // Set up nodemailer transporter
         let transporter = nodemailer.createTransport({
@@ -180,12 +181,16 @@ export const forgotPassword = async (req, res) => {
             }
         });
 
+        // Render the email template
+        const templatePath = path.join(__dirname, './views/passwordReset.ejs');
+        const emailContent = await ejs.renderFile(templatePath, { link });
+
         // Send email
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
             subject: "Password Reset",
-            text: `Click on the link to reset your password: ${link}`,
+            html: emailContent, // Send the rendered HTML
         });
 
         res.json({ status: "ok", message: "Password reset link sent to your email!" });
